@@ -5,7 +5,7 @@ from copy import deepcopy
 from django.contrib import admin
 from django.utils.translation import ugettext_lazy as _
 
-from mezzanine.blog.models import BlogPost, BlogCategory
+from mezzanine.blog.models import Blog, BlogPost, BlogCategory
 from mezzanine.conf import settings
 from mezzanine.core.admin import (DisplayableAdmin, OwnableAdmin,
                                   BaseTranslationModelAdmin)
@@ -24,6 +24,14 @@ blogpost_fieldsets.insert(1, (_("Other posts"), {
     "fields": ("related_posts",)}))
 blogpost_list_filter = deepcopy(DisplayableAdmin.list_filter) + ("categories",)
 
+
+class BlogAdmin(DisplayableAdmin, OwnableAdmin):
+    def save_form(self, request, form, change):
+        """
+        Super class ordering is important here - user must get saved first.
+        """
+        OwnableAdmin.save_form(self, request, form, change)
+        return DisplayableAdmin.save_form(self, request, form, change)
 
 class BlogPostAdmin(TweetableAdminMixin, DisplayableAdmin, OwnableAdmin):
     """
@@ -61,5 +69,6 @@ class BlogCategoryAdmin(BaseTranslationModelAdmin):
         return False
 
 
+admin.site.register(Blog, BlogAdmin)
 admin.site.register(BlogPost, BlogPostAdmin)
 admin.site.register(BlogCategory, BlogCategoryAdmin)

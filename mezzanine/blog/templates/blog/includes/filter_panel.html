@@ -30,7 +30,7 @@
         {% if not forloop.first %}</ul>{% endif %}
         <h6>{{ month.date.year }}</h6><ul class="list-unstyled">
     {% endifchanged %}
-    <li><a href="{% url "blog_post_list_month" year=month.date.year month=month.date.month %}"
+    <li><a href="{% url "blog_post_list_month" username=author year=month.date.year month=month.date.month %}"
         >{{ month.date|date:"F" }}</a> ({{ month.post_count }})</li>
 {% endfor %}
 </ul>

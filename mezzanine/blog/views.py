@@ -62,7 +62,7 @@ def blog_post_list(request, tag=None, year=None, month=None, username=None,
     return TemplateResponse(request, templates, context)
 
 
-def blog_post_detail(request, slug, year=None, month=None, day=None,
+def blog_post_detail(request, username, slug, year=None, month=None, day=None,
                      template="blog/blog_post_detail.html",
                      extra_context=None):
     """. Custom templates are checked for using the name

@@ -12,6 +12,16 @@ from mezzanine.generic.fields import CommentsField, RatingField
 from mezzanine.utils.models import AdminThumbMixin, upload_to
 
 
+class Blog(Displayable, Ownable):
+    class Meta:
+        verbose_name = _("Blog")
+        verbose_name_plural = _("Blogs")
+        ordering = ("title",)
+
+    @models.permalink
+    def get_absolute_url(self):
+        return ("blog_list", (), {'username': self.user.username})
+
 class BlogPost(Displayable, Ownable, RichText, AdminThumbMixin):
     """
     A blog post.
@@ -50,7 +60,8 @@ class BlogPost(Displayable, Ownable, RichText, AdminThumbMixin):
         (year/month/day).
         """
         url_name = "blog_post_detail"
-        kwargs = {"slug": self.slug}
+        #TODO create user slug
+        kwargs = {"username": self.user.username, "slug": self.slug}
         date_parts = ("year", "month", "day")
         if settings.BLOG_URLS_DATE_FORMAT in date_parts:
             url_name = "blog_post_detail_%s" % settings.BLOG_URLS_DATE_FORMAT
