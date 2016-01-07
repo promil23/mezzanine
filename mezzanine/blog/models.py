@@ -27,6 +27,8 @@ class BlogPost(Displayable, Ownable, RichText, AdminThumbMixin):
     A blog post.
     """
 
+    blog = models.ForeignKey(Blog, verbose_name=_("Blog"),
+                             related_name="%(class)ss")
     categories = models.ManyToManyField("BlogCategory",
                                         verbose_name=_("Categories"),
                                         blank=True, related_name="blogposts")
@@ -103,6 +105,8 @@ class BlogCategory(Slugged):
     A category for grouping blog posts into a series.
     """
 
+    blog = models.ForeignKey(Blog, verbose_name=_("Blog"),
+                             related_name="%(class)ss")
     class Meta:
         verbose_name = _("Blog Category")
         verbose_name_plural = _("Blog Categories")

@@ -12,7 +12,8 @@ from mezzanine.core.admin import (DisplayableAdmin, OwnableAdmin,
 from mezzanine.twitter.admin import TweetableAdminMixin
 
 blogpost_fieldsets = deepcopy(DisplayableAdmin.fieldsets)
-blogpost_fieldsets[0][1]["fields"].insert(1, "categories")
+blogpost_fieldsets[0][1]["fields"].insert(0, "blog")
+blogpost_fieldsets[0][1]["fields"].insert(2, "categories")
 blogpost_fieldsets[0][1]["fields"].extend(["content", "allow_comments"])
 blogpost_list_display = ["title", "user", "status", "admin_link"]
 if settings.BLOG_USE_FEATURED_IMAGE:
@@ -42,6 +43,17 @@ class BlogPostAdmin(TweetableAdminMixin, DisplayableAdmin, OwnableAdmin):
     list_display = blogpost_list_display
     list_filter = blogpost_list_filter
     filter_horizontal = ("categories", "related_posts",)
+
+    '''
+    TODO - if new object then select first user blog
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        #print(db_field.name)
+        if db_field.name == 'blog':
+            kwargs['initial'] = 1#request.user.id
+        return super(BlogPostAdmin, self).formfield_for_foreignkey(
+            db_field, request, **kwargs
+        )
+    '''
 
     def save_form(self, request, form, change):
         """
