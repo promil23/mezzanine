@@ -12,7 +12,17 @@ from mezzanine.generic.fields import CommentsField, RatingField
 from mezzanine.utils.models import AdminThumbMixin, upload_to
 
 
+def post_upload_to(instance):
+    return instance.blog.slug
+
+def blog_upload_to(instance):
+    return instance.slug
+
 class Blog(Displayable, Ownable):
+    featured_image = FileField(verbose_name=_("Featured Image"),
+        upload_to=blog_upload_to,
+        format="Image", max_length=255, null=True, blank=True)
+
     class Meta:
         verbose_name = _("Blog")
         verbose_name_plural = _("Blogs")
@@ -37,7 +47,7 @@ class BlogPost(Displayable, Ownable, RichText, AdminThumbMixin):
     comments = CommentsField(verbose_name=_("Comments"))
     rating = RatingField(verbose_name=_("Rating"))
     featured_image = FileField(verbose_name=_("Featured Image"),
-        upload_to=upload_to("blog.BlogPost.featured_image", "blog"),
+        upload_to=post_upload_to,
         format="Image", max_length=255, null=True, blank=True)
     related_posts = models.ManyToManyField("self",
                                  verbose_name=_("Related posts"), blank=True)

@@ -8,7 +8,7 @@ from django.http import Http404
 from django.shortcuts import get_object_or_404
 from django.template.response import TemplateResponse
 
-from mezzanine.blog.models import BlogPost, BlogCategory
+from mezzanine.blog.models import Blog, BlogPost, BlogCategory
 from mezzanine.blog.feeds import PostsRSS, PostsAtom
 from mezzanine.conf import settings
 from mezzanine.generic.models import Keyword
@@ -18,6 +18,7 @@ User = get_user_model()
 
 
 def blog_post_list(request, tag=None, year=None, month=None, username=None,
+                   blog_name=None,
                    category=None, template="blog/blog_post_list.html",
                    extra_context=None):
     """
@@ -27,7 +28,11 @@ def blog_post_list(request, tag=None, year=None, month=None, username=None,
     category slug or author's username if given.
     """
     templates = []
-    blog_posts = BlogPost.objects.published(for_user=request.user)
+    if blog_name is not None:
+        blog = get_object_or_404(Blog, slug=blog_name)
+        blog_posts = BlogPost.objects.published(for_user=request.user).filter(blog = blog)
+    else:
+        blog_posts = BlogPost.objects.published(for_user=request.user)
     if tag is not None:
         tag = get_object_or_404(Keyword, slug=tag)
         blog_posts = blog_posts.filter(keywords__keyword=tag)
