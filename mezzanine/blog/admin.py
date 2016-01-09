@@ -37,7 +37,6 @@ if settings.BLOG_USE_FEATURED_IMAGE:
 
 class BlogAdmin(DisplayableAdmin, OwnableAdmin):
     fieldsets = blog_fieldsets
-    #list_display = ("title", "status", "admin_link")
     list_display = ("title", "status", "admin_link", "blogposts_link")
 
     def get_urls(self):
