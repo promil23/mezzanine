@@ -12,11 +12,11 @@ from mezzanine.generic.fields import CommentsField, RatingField
 from mezzanine.utils.models import AdminThumbMixin, upload_to
 
 
-def post_upload_to(instance):
-    return instance.blog.slug
+def post_upload_to(instance = None):
+    return instance.blog.slug if instance else ''
 
-def blog_upload_to(instance):
-    return instance.slug
+def blog_upload_to(instance = None):
+    return instance.slug if instance else ''
 
 class Blog(Displayable, Ownable):
     featured_image = FileField(verbose_name=_("Featured Image"),

@@ -1,9 +1,15 @@
 from __future__ import unicode_literals
 
+from functools import update_wrapper
 from copy import deepcopy
 
 from django.contrib import admin
+from django.views.generic import RedirectView
 from django.utils.translation import ugettext_lazy as _
+from django.shortcuts import redirect
+from django.conf.urls import url
+from django.core.urlresolvers import reverse
+from django.http import HttpResponseRedirect
 
 from mezzanine.blog.models import Blog, BlogPost, BlogCategory
 from mezzanine.conf import settings
@@ -25,14 +31,68 @@ blogpost_fieldsets.insert(1, (_("Other posts"), {
     "fields": ("related_posts",)}))
 blogpost_list_filter = deepcopy(DisplayableAdmin.list_filter) + ("categories",)
 
+blog_fieldsets = deepcopy(DisplayableAdmin.fieldsets)
+if settings.BLOG_USE_FEATURED_IMAGE:
+    blog_fieldsets[0][1]["fields"].append("featured_image")
 
 class BlogAdmin(DisplayableAdmin, OwnableAdmin):
+    fieldsets = blog_fieldsets
+    #list_display = ("title", "status", "admin_link")
+    list_display = ("title", "status", "admin_link", "blogposts_link")
+
+    def get_urls(self):
+        base_urls = super(BlogAdmin, self).get_urls()
+
+        def wrap(view):
+            def wrapper(*args, **kwargs):
+                return self.admin_site.admin_view(view)(*args, **kwargs)
+            wrapper.model_admin = self
+            return update_wrapper(wrapper, view)
+
+        info = self.model._meta.app_label, self.model._meta.model_name
+
+        urlpatterns = [
+            #url(r'^(.+)/blogposts/change/$', wrap(self.posts_change_view), name='%s_%s_change' % info),
+            #url(r'^(.+)/blogposts/$', wrap(self.posts_changelist_view), name='%s_%s_change' % info),
+            url(r'^(?P<object_id>\d+)/blogposts/$', wrap(self.posts_changelist_view), name='%s_%s_change' % info),
+        ]
+        return urlpatterns + base_urls
+
+    def get_queryset(self, request):
+        """
+        Returns a QuerySet of all model instances that can be edited by the
+        admin site. This is used by changelist_view.
+        """
+        qs = self.model._default_manager.get_queryset()\
+                       .filter(user = request.user)
+        # TODO: this should be handled by some parameter to the ChangeList.
+        ordering = self.get_ordering(request)
+        if ordering:
+            qs = qs.order_by(*ordering)
+        return qs
+
+    def posts_changelist_view(self, request, object_id, form_url='', 
+                             extra_context=None):
+        return HttpResponseRedirect(
+               '{0}?blog_id={1}'\
+               .format(reverse("admin:blog_blogpost_changelist"), object_id)
+        )
+
     def save_form(self, request, form, change):
         """
         Super class ordering is important here - user must get saved first.
         """
         OwnableAdmin.save_form(self, request, form, change)
         return DisplayableAdmin.save_form(self, request, form, change)
+
+    def blogposts_link(self, obj):
+        url = '{0}?blog_id={1}'\
+               .format(reverse("admin:blog_blogpost_changelist"), obj.id)
+        return "<a href='%s'>%s</a>" % (url, _("Posts"))
+
+    blogposts_link.allow_tags = True
+    blogposts_link.short_description = ""
+
 
 class BlogPostAdmin(TweetableAdminMixin, DisplayableAdmin, OwnableAdmin):
     """
