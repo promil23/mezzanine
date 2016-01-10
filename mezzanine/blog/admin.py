@@ -18,7 +18,8 @@ from mezzanine.core.admin import (DisplayableAdmin, OwnableAdmin,
 from mezzanine.twitter.admin import TweetableAdminMixin
 
 blogpost_fieldsets = deepcopy(DisplayableAdmin.fieldsets)
-#blogpost_fieldsets[0][1]["fields"].insert(0, "blog")
+#TODO remove blog from blogpost
+blogpost_fieldsets[0][1]["fields"].insert(0, "blog")
 blogpost_fieldsets[0][1]["fields"].insert(2, "categories")
 blogpost_fieldsets[0][1]["fields"].extend(["content", "allow_comments"])
 blogpost_list_display = ["title", "user", "status", "admin_link"]
@@ -85,7 +86,7 @@ class BlogAdmin(DisplayableAdmin, OwnableAdmin):
         return DisplayableAdmin.save_form(self, request, form, change)
 
     def blogposts_link(self, obj):
-        url = '{0}?blog_id={1}'\
+        url = '{0}?blog={1}'\
                .format(reverse("admin:blog_blogpost_changelist"), obj.id)
         return "<a href='%s'>%s</a>" % (url, _("Posts"))
 

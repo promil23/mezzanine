@@ -73,7 +73,10 @@ class BlogPost(Displayable, Ownable, RichText, AdminThumbMixin):
         """
         url_name = "blog_post_detail"
         #TODO create user slug
-        kwargs = {"username": self.user.username, "slug": self.slug}
+        kwargs = {"username": self.user.username, 
+                  "blog_slug": self.blog.slug,
+                  "post_slug": self.slug
+                 }
         date_parts = ("year", "month", "day")
         if settings.BLOG_URLS_DATE_FORMAT in date_parts:
             url_name = "blog_post_detail_%s" % settings.BLOG_URLS_DATE_FORMAT
