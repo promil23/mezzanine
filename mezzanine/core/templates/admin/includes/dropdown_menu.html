@@ -7,9 +7,11 @@
         <a href="#">{% trans app.name %}</a>
         <ul class="dropdown-menu-menu">
         {% for model in app.models %}
+            {% if not model.perms.list_hide %}
             {% if model.perms.add or model.perms.change or model.perms.custom %}
             <li{% if forloop.first %} class="first"{% endif %}><a
                 href="{% if not model.perms.change and not model.perms.custom %}{{ model.add_url }}{% else %}{{ model.admin_url }}{% endif %}">{{ model.name }}</a></li>
+            {% endif %}
             {% endif %}
         {% endfor %}
         </ul>

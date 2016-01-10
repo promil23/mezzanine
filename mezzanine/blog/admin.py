@@ -18,7 +18,7 @@ from mezzanine.core.admin import (DisplayableAdmin, OwnableAdmin,
 from mezzanine.twitter.admin import TweetableAdminMixin
 
 blogpost_fieldsets = deepcopy(DisplayableAdmin.fieldsets)
-blogpost_fieldsets[0][1]["fields"].insert(0, "blog")
+#blogpost_fieldsets[0][1]["fields"].insert(0, "blog")
 blogpost_fieldsets[0][1]["fields"].insert(2, "categories")
 blogpost_fieldsets[0][1]["fields"].extend(["content", "allow_comments"])
 blogpost_list_display = ["title", "user", "status", "admin_link"]
@@ -112,7 +112,16 @@ class BlogPostAdmin(TweetableAdminMixin, DisplayableAdmin, OwnableAdmin):
         return super(BlogPostAdmin, self).formfield_for_foreignkey(
             db_field, request, **kwargs
         )
+    TODO remove unneded blogpost url
+    def get_urls(self):
+        base_urls = super(BlogPostAdmin, self).get_urls()
+        del base_urls[0]
+        return base_urls
     '''
+    def get_model_perms(self, *args, **kwargs):
+        perms = admin.ModelAdmin.get_model_perms(self, *args, **kwargs)
+        perms['list_hide'] = True
+        return perms
 
     def save_form(self, request, form, change):
         """
