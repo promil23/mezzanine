@@ -10,6 +10,7 @@ from mezzanine.core.fields import FileField
 from mezzanine.core.models import Displayable, Ownable, RichText, Slugged
 from mezzanine.generic.fields import CommentsField, RatingField
 from mezzanine.utils.models import AdminThumbMixin, upload_to
+from apps.galleries.models import Gallery
 
 
 def post_upload_to(instance = None):
@@ -39,6 +40,8 @@ class BlogPost(Displayable, Ownable, RichText, AdminThumbMixin):
 
     blog = models.ForeignKey(Blog, verbose_name=_("Blog"),
                              related_name="%(class)ss")
+    gallery = models.ForeignKey(Gallery, verbose_name=_("Gallery"),
+                                related_name="%(class)ss")
     categories = models.ManyToManyField("BlogCategory",
                                         verbose_name=_("Categories"),
                                         blank=True, related_name="blogposts")
