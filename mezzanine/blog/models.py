@@ -42,6 +42,9 @@ class BlogPost(Displayable, Ownable, RichText, AdminThumbMixin):
                              related_name="%(class)ss")
     gallery = models.ForeignKey(Gallery, verbose_name=_("Gallery"),
                                 related_name="%(class)ss")
+    map_url = models.CharField(_("Map URL"), max_length=2000, 
+                               blank=True, null=True,
+                               help_text=_("Google Maps URL"))
     categories = models.ManyToManyField("BlogCategory",
                                         verbose_name=_("Categories"),
                                         blank=True, related_name="blogposts")

@@ -21,7 +21,8 @@ blogpost_fieldsets = deepcopy(DisplayableAdmin.fieldsets)
 #TODO remove blog from blogpost
 blogpost_fieldsets[0][1]["fields"].insert(0, "blog")
 blogpost_fieldsets[0][1]["fields"].insert(1, "gallery")
-blogpost_fieldsets[0][1]["fields"].insert(2, "categories")
+blogpost_fieldsets[0][1]["fields"].insert(2, "map_url")
+blogpost_fieldsets[0][1]["fields"].insert(3, "categories")
 blogpost_fieldsets[0][1]["fields"].extend(["content", "allow_comments"])
 blogpost_list_display = ["title", "user", "status", "admin_link"]
 if settings.BLOG_USE_FEATURED_IMAGE:
