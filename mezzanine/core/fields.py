@@ -123,6 +123,8 @@ class MultiChoiceField(models.CharField):
 # Define a ``FileField`` that maps to filebrowser's ``FileBrowseField``
 # if available, falling back to Django's ``FileField`` otherwise.
 try:
+    if not hasattr(settings, 'PACKAGE_NAME_FILEBROWSER'):
+        raise ImportError
     FileBrowseField = import_dotted_path("%s.fields.FileBrowseField" %
                                          settings.PACKAGE_NAME_FILEBROWSER)
 except ImportError:
