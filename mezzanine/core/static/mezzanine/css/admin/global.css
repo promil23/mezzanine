@@ -262,14 +262,15 @@ td, th, th a, label, .help, p.help {
 #container {
     position: inherit;
 }
-#content {
+/*#content {*/
+#grp-content {
     margin: 60px 10px 60px 235px;
     padding: 0 15px 0 15px;
 }
-.popup #content {
+.popup #grp-content {
     margin-left: 0;
 }
-#content.full {
+#grp-content.full {
     margin-left: 22px;
 }
 #djDebugToolbarHandle {
