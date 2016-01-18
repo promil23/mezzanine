@@ -12,7 +12,7 @@ from mezzanine.generic.fields import CommentsField, RatingField
 from mezzanine.utils.models import AdminThumbMixin, upload_to
 from apps.galleries.models import Gallery
 from apps.portal.models import Country
-from topnotchdev import files_widget
+#from topnotchdev import files_widget
 
 
 def post_upload_to(instance = None):
@@ -40,12 +40,13 @@ class BlogPost(Displayable, Ownable, RichText, AdminThumbMixin):
     A blog post.
     """
 
-    images = files_widget.ImagesField()
+    #images = files_widget.ImagesField()
     blog = models.ForeignKey(Blog, verbose_name=_("Blog"),
                              related_name="%(class)ss")
     country = models.ForeignKey(Country, verbose_name=_("Country"),
                              related_name="%(class)ss")
     gallery = models.ForeignKey(Gallery, verbose_name=_("Gallery"),
+                                blank=True, null=True,
                                 related_name="%(class)ss")
     map_url = models.CharField(_("Map URL"), max_length=2000, 
                                blank=True, null=True,

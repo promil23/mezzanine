@@ -1,5 +1,5 @@
 
-jQuery(function($) {
+grp.jQuery(function($) {
 
     $('#user-tools').after($('.dropdown-menu form'));
     $('#header form').show().addClass('dark-select').find('select').chosen();

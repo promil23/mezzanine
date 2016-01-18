@@ -19,7 +19,7 @@ from mezzanine.twitter.admin import TweetableAdminMixin
 
 blogpost_fieldsets = deepcopy(DisplayableAdmin.fieldsets)
 #TODO remove blog from blogpost
-blogpost_fieldsets[0][1]["fields"].insert(0, "images")
+#blogpost_fieldsets[0][1]["fields"].insert(0, "images")
 blogpost_fieldsets[0][1]["fields"].insert(1, "blog")
 blogpost_fieldsets[0][1]["fields"].insert(2, "country")
 blogpost_fieldsets[0][1]["fields"].insert(3, "gallery")
