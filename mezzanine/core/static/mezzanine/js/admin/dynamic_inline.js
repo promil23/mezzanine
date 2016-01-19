@@ -67,10 +67,11 @@ grp.jQuery(function($) {
             });
         });
     });
+    /*
 
     // Remove extraneous ``template`` forms from inline formsets since
     // Mezzanine has its own method of dynamic inlines.
-    $(parentSelector + ' > *:has(*[name*=__prefix__])').remove();
+    //$(parentSelector + ' > *:has(*[name*=__prefix__])').remove();
 
     // Remove the "add another" row used in Django's default admin templates
     $(parentSelector + ' > *.add-row').remove();
@@ -104,5 +105,6 @@ grp.jQuery(function($) {
 
     // Show the first hidden inline
     addAnother.click();
+    */
 
 });
