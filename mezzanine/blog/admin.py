@@ -123,6 +123,14 @@ class BlogPostAdmin(TweetableAdminMixin, DisplayableAdmin, OwnableAdmin):
         del base_urls[0]
         return base_urls
     '''
+    def changelist_view(self, request, form_url='', 
+                             extra_context=None):
+        extra_context = extra_context or {}
+        #TODO error handling if no blog
+        blog_id = request.GET['blog']
+        extra_context['blog'] = Blog.objects.get(id = blog_id)
+        return super(BlogPostAdmin, self).changelist_view(request, extra_context=extra_context)
+
     def get_model_perms(self, *args, **kwargs):
         perms = admin.ModelAdmin.get_model_perms(self, *args, **kwargs)
         perms['list_hide'] = True

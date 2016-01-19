@@ -1,5 +1,5 @@
 {% extends "admin/change_list.html" %}
-{% load i18n admin_urls admin_static admin_list %}
+{% load i18n admin_urls admin_static admin_list blog_tags %}
 
 {% block object-tools-items %}
 <li>
@@ -13,4 +13,21 @@
     {% blocktrans with cl.opts.verbose_name as name %}Add {{ name }}{% endblocktrans %}
   </a>
 </li>
+{% endblock %}
+
+{% block breadcrumbs %}
+    {% if not is_popup %}
+        <ul class="grp-horizontal-list">
+            <li><a href="{% url 'admin:index' %}">{% trans "Home" %}</a></li>
+            {% if blog %}
+            <li><a href="{% url 'admin:blog_blog_changelist' %}">{% get_verbose_name_plural blog %}</a>
+            </li>
+            <li><a href="{% url 'admin:blog_blog_change' blog.id %}">{{ blog }}</a>
+            </li>
+            {% else %}
+            <li><a href="{% url 'admin:app_list' app_label=cl.opts.app_label %}">{{ cl.opts.app_config.verbose_name }}</a></li>
+            {% endif %}
+            <li>{{ cl.opts.verbose_name_plural|capfirst }}</li>
+        </ul>
+    {% endif %}
 {% endblock %}

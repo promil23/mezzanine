@@ -95,3 +95,10 @@ def quick_blog(context):
     """
     context["form"] = BlogPostForm()
     return context
+
+@register.simple_tag
+def get_verbose_name_plural(instance):
+    """
+    Returns object's plural verbose_name
+    """
+    return instance._meta.verbose_name_plural
