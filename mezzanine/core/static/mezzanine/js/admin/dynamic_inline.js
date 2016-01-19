@@ -1,5 +1,5 @@
 
-jQuery(function($) {
+grp.jQuery(function($) {
 
     var selectFieldDirty = function(select, unselectedIndex) {
         return $.grep(select.options, function(option) {

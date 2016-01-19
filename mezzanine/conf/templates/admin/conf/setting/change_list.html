@@ -27,9 +27,18 @@
             </div>
         {% endif %}
     {% endfor %}
+    {% comment %}
     <div class="submit-row">
         <input type="submit" class="default" value="{% trans "Save" %}" />
     </div>
+    {% endcomment %}
+    <footer id="submit" class="grp-module grp-submit-row grp-fixed-footer">
+        <ul>
+            <li>
+                <input type="submit" class="grp-button grp-default" name="_save" value='{% trans "Save" %}'/>
+            </li>
+        </ul>
+    </footer>
     </form>
 
 </div>

@@ -1,7 +1,11 @@
 {% load i18n %}
 <div class="dynamic-inline">
     {% include "admin/edit_inline/tabular.html" %}
+    <div class="spacer">
+    </div>
+    {% comment %}
     <p class="add-another" 
         style="margin:10px; font-weight:bold; text-align:right;">
         <a href="#">{% trans "Add another" %}</a></p>
+    {% endcomment %}
 </div>

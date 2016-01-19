@@ -127,7 +127,8 @@ class BaseDynamicInlineAdmin(object):
     """
 
     form = DynamicInlineAdminForm
-    extra = 20
+    #extra = 20
+    extra = 1
 
     def get_fields(self, request, obj=None):
         fields = super(BaseDynamicInlineAdmin, self).get_fields(request, obj)

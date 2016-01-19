@@ -58,13 +58,13 @@ function custom_file_browser(field_name, url, type, win) {
     return false;
 }
 
-jQuery(function($) {
+grp.jQuery(function($) {
 
     if (typeof tinyMCE != 'undefined') {
 
         tinyMCE.init({
             selector: "textarea.mceEditor",
-            height: '500px',
+            //height: '500px',
             language: language_codes[window.__language_code] || 'en',
             plugins: [
                 "advlist autolink lists link image charmap print preview anchor",

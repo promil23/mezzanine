@@ -74,7 +74,7 @@ class LazyAdminSite(AdminSite):
                 # doesn't provide), so that we can target it in the
                 # ADMIN_MENU_ORDER setting, allowing each view to correctly
                 # highlight its left-hand admin nav item.
-                url("^media-library/$", lambda r: redirect("fb_browse"),
+                url("^media-library/$", lambda r: redirect("filebrowser:fb_browse"),
                     name="media-library"),
                 url("^media-library/", include(fb_urls)),
             ] + urls

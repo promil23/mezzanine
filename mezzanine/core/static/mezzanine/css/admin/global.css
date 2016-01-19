@@ -118,12 +118,24 @@ body.popup .breadcrumbs + ul.messagelist {
 }
 #side-panel {
     background-color: #3f3f3f;
-    height: 100%;
     left: 0;
     position: fixed;
     top: 0;
     z-index: 2;
+    overflow: auto;
+    margin-top: 20px;
+    bottom: 58px;
 }
+.dashboard #side-panel,
+.grp-change-list.grp-filebrowser #side-panel {
+    height: 100%;
+    margin-top: initial;
+    bottom: initial;
+}
+#grp-content-container > form {
+    padding-bottom: 60px; /* side-panel bottom + 2px */
+}
+
 .dropdown-menu {
     border-right: 1px solid #222;
     float: left;
