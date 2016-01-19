@@ -36,7 +36,7 @@ grp.jQuery(function($) {
         }).length > 0;
     };
 
-    var itemSelector = window.__grappelli_installed ? '.items' : 'tbody';
+    var itemSelector = window.__grappelli_installed ? '.grp-table' : 'tbody';
     var parentSelector = '.dynamic-inline ' + itemSelector;
     var orderSelector = window.__grappelli_installed ? '._order input' : '.field-_order input';
 
