@@ -43,6 +43,7 @@ grp.jQuery(function($) {
         var submitKeywords = function() {
             var field = fields.shift();
             var keywords = {text_keywords: field.value};
+            console.log(keywords);
             $.post(window.__admin_keywords_submit_url, keywords, function(data) {
                 var ids = data.split("|")[0].split(',');
                 field.value = data.split("|")[1];

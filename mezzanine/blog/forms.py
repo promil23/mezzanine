@@ -2,7 +2,8 @@ from __future__ import unicode_literals
 
 from django import forms
 
-from mezzanine.blog.models import BlogPost
+#from mezzanine.blog.models import BlogPost
+from apps.portal.models import BlogPost
 from mezzanine.core.models import CONTENT_STATUS_DRAFT
 
 

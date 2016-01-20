@@ -2,7 +2,7 @@ from modeltranslation.translator import translator
 from mezzanine.core.translation import (TranslatedSlugged,
                                         TranslatedDisplayable,
                                         TranslatedRichText)
-from mezzanine.blog.models import BlogCategory, BlogPost
+from apps.portal.models import BlogPost, BlogCategory
 
 
 class TranslatedBlogPost(TranslatedDisplayable, TranslatedRichText):

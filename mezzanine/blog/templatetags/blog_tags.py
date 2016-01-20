@@ -5,7 +5,7 @@ from django.contrib.auth import get_user_model
 from django.db.models import Count, Q
 
 from mezzanine.blog.forms import BlogPostForm
-from mezzanine.blog.models import BlogPost, BlogCategory
+from apps.portal.models import BlogPost, BlogCategory
 from mezzanine.generic.models import Keyword
 from mezzanine import template
 

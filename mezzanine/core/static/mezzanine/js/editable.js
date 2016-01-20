@@ -1,4 +1,4 @@
-jQuery(function($) {
+grp.jQuery(function($) {
 
     $(window.__toolbar_html).appendTo('body');
 

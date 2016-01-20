@@ -13,7 +13,8 @@ from django.core.management.base import BaseCommand, CommandError
 from django.utils.encoding import force_text
 from django.utils.html import strip_tags
 
-from mezzanine.blog.models import BlogPost, BlogCategory
+from mezzanine.blog.models import BlogCategory
+from apps.portsl.models import BlogPost
 from mezzanine.conf import settings
 from mezzanine.core.models import CONTENT_STATUS_DRAFT
 from mezzanine.core.models import CONTENT_STATUS_PUBLISHED

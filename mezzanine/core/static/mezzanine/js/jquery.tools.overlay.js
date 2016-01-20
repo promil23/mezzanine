@@ -1,4 +1,5 @@
 // http://n33.co/2013/03/23/browser-on-jquery-19x-for-legacy-ie-detection
+    /*
 jQuery.browser={};
 (function() {
     jQuery.browser.msie = false;
@@ -8,6 +9,7 @@ jQuery.browser={};
         jQuery.browser.version = RegExp.$1;
     }
 })();
+*/
 
 /**
  * @license
@@ -39,7 +41,7 @@ jQuery.browser={};
 			effect: 'default',
 
 			// since 1.2. fixed positioning not supported by IE6
-			fixed: !$.browser.msie || $.browser.version > 6,
+			fixed: true,//!$.browser.msie || $.browser.version > 6,
 
 			left: 'center',
 			load: false, // 1.2
@@ -300,5 +302,5 @@ jQuery.browser={};
 		return conf.api ? el: this;
 	};
 
-})(jQuery);
+})(grp.jQuery);
 

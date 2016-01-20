@@ -10,10 +10,6 @@ from mezzanine.core.fields import FileField
 from mezzanine.core.models import Displayable, Ownable, RichText, Slugged
 from mezzanine.generic.fields import CommentsField, RatingField
 from mezzanine.utils.models import AdminThumbMixin, upload_to
-from apps.galleries.models import Gallery
-from apps.portal.models import Country
-#from topnotchdev import files_widget
-
 
 def post_upload_to(instance = None):
     return instance.blog.slug if instance else ''
@@ -21,36 +17,11 @@ def post_upload_to(instance = None):
 def blog_upload_to(instance = None):
     return instance.slug if instance else ''
 
-class Blog(Displayable, Ownable):
-    featured_image = FileField(verbose_name=_("Featured Image"),
-        upload_to=blog_upload_to,
-        format="Image", max_length=255, null=True, blank=True)
-
-    class Meta:
-        verbose_name = _("Blog")
-        verbose_name_plural = _("Blogs")
-        ordering = ("title",)
-
-    @models.permalink
-    def get_absolute_url(self):
-        return ("blog_list", (), {'username': self.user.username})
-
 class BlogPost(Displayable, Ownable, RichText, AdminThumbMixin):
     """
     A blog post.
     """
 
-    #images = files_widget.ImagesField()
-    blog = models.ForeignKey(Blog, verbose_name=_("Blog"),
-                             related_name="%(class)ss")
-    country = models.ForeignKey(Country, verbose_name=_("Country"),
-                             related_name="%(class)ss")
-    gallery = models.ForeignKey(Gallery, verbose_name=_("Gallery"),
-                                blank=True, null=True,
-                                related_name="%(class)ss")
-    map_url = models.CharField(_("Map URL"), max_length=2000, 
-                               blank=True, null=True,
-                               help_text=_("Google Maps URL"))
     categories = models.ManyToManyField("BlogCategory",
                                         verbose_name=_("Categories"),
                                         blank=True, related_name="blogposts")
@@ -70,6 +41,7 @@ class BlogPost(Displayable, Ownable, RichText, AdminThumbMixin):
         verbose_name = _("Blog post")
         verbose_name_plural = _("Blog posts")
         ordering = ("-publish_date",)
+        abstract = True
 
     def get_absolute_url(self):
         """
@@ -124,19 +96,3 @@ class BlogPost(Displayable, Ownable, RichText, AdminThumbMixin):
             setattr(self, "_keywords", keywords)
             return self._keywords
 
-
-class BlogCategory(Slugged):
-    """
-    A category for grouping blog posts into a series.
-    """
-
-    blog = models.ForeignKey(Blog, verbose_name=_("Blog"),
-                             related_name="%(class)ss")
-    class Meta:
-        verbose_name = _("Blog Category")
-        verbose_name_plural = _("Blog Categories")
-        ordering = ("title",)
-
-    @models.permalink
-    def get_absolute_url(self):
-        return ("blog_post_list_category", (), {"category": self.slug})

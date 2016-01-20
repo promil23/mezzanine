@@ -2,6 +2,7 @@ from __future__ import unicode_literals
 
 from functools import update_wrapper
 from copy import deepcopy
+from urllib.parse import urlparse, parse_qs
 
 from django.contrib import admin
 from django.views.generic import RedirectView
@@ -10,8 +11,11 @@ from django.shortcuts import redirect
 from django.conf.urls import url
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
+from django.contrib.admin.templatetags.admin_urls import add_preserved_filters
+from django.contrib.admin.options import TO_FIELD_VAR
+from django.contrib.admin.utils import unquote
 
-from mezzanine.blog.models import Blog, BlogPost, BlogCategory
+from apps.portal.models import Blog, BlogPost, BlogCategory
 from mezzanine.conf import settings
 from mezzanine.core.admin import (DisplayableAdmin, OwnableAdmin,
                                   BaseTranslationModelAdmin)
@@ -35,68 +39,6 @@ blogpost_fieldsets.insert(1, (_("Other posts"), {
     "classes": ("collapse-closed",),
     "fields": ("related_posts",)}))
 blogpost_list_filter = deepcopy(DisplayableAdmin.list_filter) + ("categories",)
-
-blog_fieldsets = deepcopy(DisplayableAdmin.fieldsets)
-if settings.BLOG_USE_FEATURED_IMAGE:
-    blog_fieldsets[0][1]["fields"].append("featured_image")
-
-class BlogAdmin(DisplayableAdmin, OwnableAdmin):
-    fieldsets = blog_fieldsets
-    list_display = ("title", "status", "admin_link", "blogposts_link")
-
-    def get_urls(self):
-        base_urls = super(BlogAdmin, self).get_urls()
-
-        def wrap(view):
-            def wrapper(*args, **kwargs):
-                return self.admin_site.admin_view(view)(*args, **kwargs)
-            wrapper.model_admin = self
-            return update_wrapper(wrapper, view)
-
-        info = self.model._meta.app_label, self.model._meta.model_name
-
-        urlpatterns = [
-            #url(r'^(.+)/blogposts/change/$', wrap(self.posts_change_view), name='%s_%s_change' % info),
-            #url(r'^(.+)/blogposts/$', wrap(self.posts_changelist_view), name='%s_%s_change' % info),
-            url(r'^(?P<object_id>\d+)/blogposts/$', wrap(self.posts_changelist_view), name='%s_%s_change' % info),
-        ]
-        return urlpatterns + base_urls
-
-    def get_queryset(self, request):
-        """
-        Returns a QuerySet of all model instances that can be edited by the
-        admin site. This is used by changelist_view.
-        """
-        qs = self.model._default_manager.get_queryset()\
-                       .filter(user = request.user)
-        # TODO: this should be handled by some parameter to the ChangeList.
-        ordering = self.get_ordering(request)
-        if ordering:
-            qs = qs.order_by(*ordering)
-        return qs
-
-    def posts_changelist_view(self, request, object_id, form_url='', 
-                             extra_context=None):
-        return HttpResponseRedirect(
-               '{0}?blog_id={1}'\
-               .format(reverse("admin:blog_blogpost_changelist"), object_id)
-        )
-
-    def save_form(self, request, form, change):
-        """
-        Super class ordering is important here - user must get saved first.
-        """
-        OwnableAdmin.save_form(self, request, form, change)
-        return DisplayableAdmin.save_form(self, request, form, change)
-
-    def blogposts_link(self, obj):
-        url = '{0}?blog={1}'\
-               .format(reverse("admin:blog_blogpost_changelist"), obj.id)
-        return "<a href='%s'>%s</a>" % (url, _("Posts"))
-
-    blogposts_link.allow_tags = True
-    blogposts_link.short_description = ""
-
 
 class BlogPostAdmin(TweetableAdminMixin, DisplayableAdmin, OwnableAdmin):
     """
@@ -131,6 +73,33 @@ class BlogPostAdmin(TweetableAdminMixin, DisplayableAdmin, OwnableAdmin):
         extra_context['blog'] = Blog.objects.get(id = blog_id)
         return super(BlogPostAdmin, self).changelist_view(request, extra_context=extra_context)
 
+    def render_change_form(self, request, context, add=False, change=False, form_url='', obj=None):
+        opts = self.model._meta
+        app_label = opts.app_label
+        preserved_filters = self.get_preserved_filters(request)
+        form_url = add_preserved_filters({'preserved_filters': preserved_filters, 'opts': opts}, form_url)
+
+        if add:
+            #print(form_url)
+            form_url += '&blog=1'
+        return super(BlogPostAdmin, self).render_change_form(request, context, add, change, form_url, obj)
+
+    #TODO @csrf_protect_m and @transaction.atomic
+    def changeform_view(self, request, object_id=None, form_url='', extra_context=None):
+        to_field = request.POST.get(TO_FIELD_VAR, request.GET.get(TO_FIELD_VAR))
+        if to_field and not self.to_field_allowed(request, to_field):
+            raise DisallowedModelAdminToField("The field %s cannot be referenced." % to_field)
+        extra_context = extra_context or {}
+        add = object_id is None
+
+        if add:
+            #TODO error handling if no blog
+            blog_id = request.GET['blog']
+            extra_context['original'] = {'blog': Blog.objects.get(id = blog_id)}
+        else:
+            post_obj = self.get_object(request, unquote(object_id), to_field)
+        return super(BlogPostAdmin, self).changeform_view(request, object_id, form_url, extra_context)
+
     def get_model_perms(self, *args, **kwargs):
         perms = admin.ModelAdmin.get_model_perms(self, *args, **kwargs)
         perms['list_hide'] = True
@@ -157,11 +126,11 @@ class BlogCategoryAdmin(BaseTranslationModelAdmin):
         Hide from the admin menu unless explicitly set in ``ADMIN_MENU_ORDER``.
         """
         for (name, items) in settings.ADMIN_MENU_ORDER:
-            if "blog.BlogCategory" in items:
+            if "portal.BlogCategory" in items:
                 return True
         return False
 
 
-admin.site.register(Blog, BlogAdmin)
+#admin.site.register(Blog, BlogAdmin)
 admin.site.register(BlogPost, BlogPostAdmin)
 admin.site.register(BlogCategory, BlogCategoryAdmin)
