@@ -41,10 +41,11 @@ var language_codes = {
     'zh-hans': 'zh_CN'
 };
 
+/*
 function custom_file_browser(field_name, url, type, win) {
     tinyMCE.activeEditor.windowManager.open({
         title: 'Select ' + type + ' to insert',
-        file: window.__filebrowser_url + '?pop=5&type=' + type,
+        file: window.__filebrowser_url + '?pop=2&file=' + type,
         width: 800,
         height: 500,
         resizable: 'yes',
@@ -57,13 +58,36 @@ function custom_file_browser(field_name, url, type, win) {
     });
     return false;
 }
+*/
+
+function myFilePicker(callback, value, meta) {
+
+    //var cmsURL = '/admin/filebrowser/browse/?pop=2';
+    //cmsURL = cmsURL + '&type=' + type;
+    var cmsURL = window.__filebrowser_url + '?pop=2' + '&type=' + meta.filetype;
+
+    tinyMCE.activeEditor.windowManager.open({
+        file: cmsURL,
+        width: 980,  // Your dimensions may differ - toy around with them!
+        height: 500,
+        resizable: 'yes',
+        scrollbars: 'yes',
+        inline: 'no',  // This parameter only has an effect if you use the inlinepopups plugin!
+        close_previous: 'no'
+    }, {
+        //window: win,
+        //input: field_name,
+        oninsert: function (url) {
+            callback(url);
+        }
+    });
+    return false;
+}
+
 
 grp.jQuery(function($) {
-
-    if (typeof tinyMCE != 'undefined') {
-
-        tinyMCE.init({
-            selector: "textarea.mceEditor",
+    tinyMCEOptions = {
+            selector: 'textarea.mceEditor:not([name*="__prefix__"])',
             //height: '500px',
             language: language_codes[window.__language_code] || 'en',
             plugins: [
@@ -80,10 +104,17 @@ grp.jQuery(function($) {
                       "alignleft aligncenter alignright alignjustify | " +
                       "bullist numlist outdent indent | link image table | " +
                       "code fullscreen"),
-            file_browser_callback: custom_file_browser,
+            //file_browser_callback: custom_file_browser,
+            file_picker_callback: function (callback, value, meta) {
+                myFilePicker(callback, value, meta);
+            },
             content_css: window.__tinymce_css,
             valid_elements: "*[*]"  // Don't strip anything since this is handled by bleach.
-        });
+    };
+
+    if (typeof tinyMCE != 'undefined') {
+
+        tinyMCE.init(tinyMCEOptions);
 
     }
 
