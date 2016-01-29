@@ -363,9 +363,10 @@ class DisplayableManager(CurrentSiteManager, PublishedManager,
         instances, including a fake homepage instance if none exists.
         Used in ``mezzanine.core.sitemaps``.
         """
-        home = self.model(title=_("Home"))
-        setattr(home, "get_absolute_url", home_slug)
-        items = {home.get_absolute_url(): home}
+        #home = self.model(title=_("Home"))
+        #setattr(home, "get_absolute_url", home_slug)
+        #items = {home.get_absolute_url(): home}
+        items = {}
         for model in apps.get_models():
             if issubclass(model, self.model):
                 for item in (model.objects.published(for_user=for_user)

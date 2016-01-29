@@ -68,12 +68,12 @@ function myFilePicker(callback, value, meta) {
 
     tinyMCE.activeEditor.windowManager.open({
         file: cmsURL,
-        width: 980,  // Your dimensions may differ - toy around with them!
-        height: 500,
+        //width: 980,  // Your dimensions may differ - toy around with them!
+        //height: 500,
         resizable: 'yes',
         scrollbars: 'yes',
         inline: 'no',  // This parameter only has an effect if you use the inlinepopups plugin!
-        close_previous: 'no'
+        close_previous: 'no',
     }, {
         //window: win,
         //input: field_name,
@@ -89,9 +89,10 @@ grp.jQuery(function($) {
     tinyMCEOptions = {
             selector: 'textarea.mceEditor:not([name*="__prefix__"])',
             //height: '500px',
+            width: '100%',
             language: language_codes[window.__language_code] || 'en',
             plugins: [
-                "advlist autolink lists link image charmap print preview anchor",
+                "advlist autolink autoresize, lists link image charmap print preview anchor",
                 "searchreplace visualblocks code fullscreen",
                 "insertdatetime media table contextmenu paste"
             ],
@@ -104,10 +105,10 @@ grp.jQuery(function($) {
                       "alignleft aligncenter alignright alignjustify | " +
                       "bullist numlist outdent indent | link image table | " +
                       "code fullscreen"),
-            //file_browser_callback: custom_file_browser,
             file_picker_callback: function (callback, value, meta) {
                 myFilePicker(callback, value, meta);
             },
+            image_class_list: [{'text': 'In gallery', 'value': 'img-responsive'}],
             content_css: window.__tinymce_css,
             valid_elements: "*[*]"  // Don't strip anything since this is handled by bleach.
     };
