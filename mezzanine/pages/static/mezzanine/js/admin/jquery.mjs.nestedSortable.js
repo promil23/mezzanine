@@ -529,4 +529,4 @@
 	}));
 
 	$.mjs.nestedSortable.prototype.options = $.extend({}, $.ui.sortable.prototype.options, $.mjs.nestedSortable.prototype.options);
-})(jQuery);
+})(grp.jQuery);

@@ -16,6 +16,16 @@ def page(request):
         # set_helpers has always expected the current template context,
         # but here we're just passing in our context dict with enough
         # variables to satisfy it.
-        context = {"request": request, "page": page, "_current_page": page}
+        #context = {"request": request, "page": page, "_current_page": page}
+        username = request.path.split('/', 2)
+        if len(username) < 2 or username[1] == '':
+            username = ''
+        else:
+            username = username[1]
+
+        context = {"request": request, 
+                   "page": page, 
+                   "username": username,
+                   "_current_page": page}
         page.set_helpers(context)
     return context
