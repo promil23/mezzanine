@@ -122,9 +122,11 @@ body.popup .breadcrumbs + ul.messagelist {
     position: fixed;
     top: 0;
     z-index: 2;
-    overflow: auto;
+    /*overflow: auto;*/
     margin-top: 20px;
-    bottom: 58px;
+    /*bottom: 58px;*/
+    overflow-y: visible;
+    height: 100%;
 }
 .dashboard #side-panel,
 .grp-change-list.grp-filebrowser #side-panel {
@@ -140,9 +142,9 @@ body.popup .breadcrumbs + ul.messagelist {
     border-right: 1px solid #222;
     float: left;
     height: 95%; /* Fallback height */
-    height: -webkit-calc(100% - 40px); /* Safari 6.0 */
-    height: calc(100% - 40px); /* Firefox, Chrome, IE9+ */
-    margin-top: 40px;
+    height: -webkit-calc(100% - 60px); /* Safari 6.0 */
+    height: calc(100% - 60px); /* Firefox, Chrome, IE9+ */
+    margin-top: 40px; /* 60px = side-panel-margin-top + margin-top */
     overflow-x: hidden;
     overflow-y: auto;
     width: 216px;
