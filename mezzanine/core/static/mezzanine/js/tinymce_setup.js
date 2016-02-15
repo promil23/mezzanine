@@ -96,6 +96,7 @@ grp.jQuery(function($) {
                 "searchreplace visualblocks code fullscreen",
                 "insertdatetime media table contextmenu paste"
             ],
+            autoresize_max_height: 400,
             link_list: '/displayable_links.js',
             relative_urls: false,
             convert_urls: false,

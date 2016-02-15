@@ -49,6 +49,7 @@ class TinyMceWidget(forms.Textarea):
     def __init__(self, *args, **kwargs):
         super(TinyMceWidget, self).__init__(*args, **kwargs)
         self.attrs["class"] = "mceEditor"
+        self.attrs["style"] = "width: 400px;height: 300px;"
 
 
 class OrderWidget(forms.HiddenInput):
