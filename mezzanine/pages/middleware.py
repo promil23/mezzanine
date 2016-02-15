@@ -33,7 +33,8 @@ class PageMiddleware(object):
     context, so that the current page is always available.
     """
 
-    def __init__(self):
+    def __init__(self, skip = False):
+        self.skip = skip
         if "mezzanine.pages" not in settings.INSTALLED_APPS:
             raise MiddlewareNotUsed
 
@@ -70,7 +71,7 @@ class PageMiddleware(object):
         slug = path_to_slug(request.path_info)
         pages = Page.objects.with_ascendants_for_slug(slug,
                         for_user=request.user, include_login_required=True)
-        if pages:
+        if not self.skip and pages:
             page = pages[0]
             setattr(request, "page", page)
             context_processors.page(request)

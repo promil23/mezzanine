@@ -8,7 +8,7 @@ from django.shortcuts import get_object_or_404
 from django.utils.feedgenerator import Atom1Feed
 from django.utils.html import strip_tags
 
-from apps.portal.models import BlogPost, BlogCategory
+from apps.portal.models import Blog, BlogPost, BlogCategory, Country
 from mezzanine.conf import settings
 from mezzanine.core.templatetags.mezzanine_tags import richtext_filters
 from mezzanine.core.request import current_request
@@ -36,6 +36,8 @@ class PostsRSS(Feed):
         self.tag = kwargs.pop("tag", None)
         self.category = kwargs.pop("category", None)
         self.username = kwargs.pop("username", None)
+        self.blog_slug = kwargs.pop("blog_slug", None)
+        self.country_slug = kwargs.pop("country_slug", None)
         super(PostsRSS, self).__init__(*args, **kwargs)
         self._public = True
         try:
@@ -67,9 +69,13 @@ class PostsRSS(Feed):
         return self._description
 
     def link(self):
-        return self.add_domain(reverse("blog_post_list"))
+        #return self.add_domain(reverse("blog_post_list"))
+        return self.add_domain(reverse("blog_post_list", args=['prom', 'asia']))
 
-    def items(self):
+    #def get_object(self, request):
+    #    return Blog.objects.published().get(slug = self.blog_slug)
+
+    def items(self, obj):
         if not self._public:
             return []
         blog_posts = BlogPost.objects.published().select_related("user").prefetch_related("categories")
@@ -82,6 +88,13 @@ class PostsRSS(Feed):
         if self.username:
             author = get_object_or_404(User, username=self.username)
             blog_posts = blog_posts.filter(user=author)
+        if self.blog_slug:
+            blog = get_object_or_404(Blog, slug=self.blog_slug)
+            blog_posts = blog_posts.filter(blog=blog)
+        if self.country_slug:
+            country = get_object_or_404(Country, slug=self.country_slug)
+            blog_posts = blog_posts.filter(country=country)
+
         limit = settings.BLOG_RSS_LIMIT
         if limit is not None:
             blog_posts = blog_posts[:settings.BLOG_RSS_LIMIT]
