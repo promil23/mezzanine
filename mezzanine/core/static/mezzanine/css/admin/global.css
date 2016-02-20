@@ -131,7 +131,7 @@ body.popup .breadcrumbs + ul.messagelist {
 .dashboard #side-panel,
 .grp-change-list.grp-filebrowser #side-panel {
     height: 100%;
-    margin-top: initial;
+    /*margin-top: initial;*/
     bottom: initial;
 }
 #grp-content-container > form {
