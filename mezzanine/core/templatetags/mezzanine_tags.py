@@ -265,7 +265,7 @@ def search_form(context, search_model_names=None):
 
 @register.simple_tag
 def thumbnail(image_url, width, height, upscale=True, quality=95, left=.5,
-              top=.5, padding=False, padding_color="#fff"):
+              top=.5, padding=False, padding_color="#fff", rotate = False):
     """
     Given the URL to an image, resizes the image using the given width
     and height on the first time it is requested, and returns the URL
@@ -347,6 +347,11 @@ def thumbnail(image_url, width, height, upscale=True, quality=95, left=.5,
     to_height = int(height)
     from_width = image.size[0]
     from_height = image.size[1]
+
+    if rotate and from_width < from_height:
+        t2 = to_width
+        to_width = to_height
+        to_height = t2
 
     if not upscale:
         to_width = min(to_width, from_width)
