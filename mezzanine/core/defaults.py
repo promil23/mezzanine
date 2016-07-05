@@ -280,7 +280,7 @@ register_setting(
     description=_("List of HTML attributes that won't be stripped from "
         "``RichTextField`` instances."),
     editable=False,
-    default=("abbr", "accept", "accept-charset", "accesskey", "action",
+    default=("currency", "price", "abbr", "accept", "accept-charset", "accesskey", "action",
         "align", "alt", "axis", "border", "cellpadding", "cellspacing",
         "char", "charoff", "charset", "checked", "cite", "class", "clear",
         "cols", "colspan", "color", "compact", "coords", "datetime", "dir",

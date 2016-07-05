@@ -105,13 +105,69 @@ grp.jQuery(function($) {
             toolbar: ("insertfile undo redo | styleselect | bold italic | " +
                       "alignleft aligncenter alignright alignjustify | " +
                       "bullist numlist outdent indent | link image table | " +
-                      "code fullscreen"),
+                      "code fullscreen editprice edittip"),
             file_picker_callback: function (callback, value, meta) {
                 myFilePicker(callback, value, meta);
             },
             image_class_list: [{'text': 'In gallery', 'value': 'img-responsive'}],
             content_css: window.__tinymce_css,
-            valid_elements: "*[*]"  // Don't strip anything since this is handled by bleach.
+            content_style: "div.bct-price-component {display: inline-block;}",
+            valid_elements: "*[*]",  // Don't strip anything since this is handled by bleach.
+            force_br_newlines : true,
+            force_p_newlines : false,
+            //forced_root_block : false,
+            //extended_valid_elements : 'span[price,currency,class]',
+            extended_valid_elements : 'span[price|currency|class]',
+            //extended_valid_elements : '*[*]',
+            setup: function(ed) {
+                ed.addButton('editprice', {
+                            title : 'Edit price',
+                            text: 'Edit price',
+                            //image : 'img/example.gif',
+                            icon: false,
+                            onclick : function() {
+                                ed.windowManager.open({
+                                    title: 'Edit price',
+                                    body: [
+                                        {type: 'textbox', name: 'price', label: 'Price', value: ed.selection.getContent()}
+                                    ],
+                                    onsubmit: function(e) {    
+                                        ed.focus();
+                                        var price_arr = e.data.price.split(' ');
+                                        var price = price_arr[0];
+                                        var ccy_code = price_arr[1];
+                                        var symbol = currencies[ccy_code];
+
+                                        var content = 
+                                        '<span class="bct-price-component">' + 
+                                            '<span class="price" price="' + price + '">' + price + '</span><span class="ccy-symbol" currency="' + ccy_code + '">' + symbol + '</span>' + 
+                                        '</span>';
+                                        ed.selection.setContent(content);
+                                    }
+                                });
+                            }
+                });
+                ed.addButton('edittip', {
+                            title : 'Edit tip',
+                            text: 'Edit tip',
+                            icon: false,
+                            onclick : function() {
+                                var tipNumber = ed.selection.getContent().replace('[','').replace(']','');
+                                ed.windowManager.open({
+                                    title: 'Edit tip',
+                                    body: [
+                                        {type: 'textbox', name: 'tip', label: 'Tip number', value: tipNumber}
+                                    ],
+                                    onsubmit: function(e) {    
+                                        ed.focus();
+                                        var number = e.data.tip;
+                                        var content = '[<a href="#tip-' + number + '">' + number + '</a>]';
+                                        ed.selection.setContent(content);
+                                    }
+                                });
+                            }
+                });
+            }
     };
 
     if (typeof tinyMCE != 'undefined') {
