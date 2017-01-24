@@ -24,12 +24,12 @@ if settings.USE_MODELTRANSLATION:
         """
         Mimic modeltranslation's TabbedTranslationAdmin but uses a
         custom tabbed_translation_fields.js
-        """
-        class Media:
-            js = (
                 static("modeltranslation/js/force_jquery.js"),
                 static("mezzanine/js/%s" % settings.JQUERY_UI_FILENAME),
                 static("mezzanine/js/admin/tabbed_translation_fields.js"),
+        """
+        class Media:
+            js = (
             )
             css = {
                 "all": (static(

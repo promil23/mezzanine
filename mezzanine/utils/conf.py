@@ -97,7 +97,7 @@ def set_dynamic_settings(s):
         else:
             # Force i18n so we are assured that modeltranslation is active
             s["USE_I18N"] = True
-            append("INSTALLED_APPS", "modeltranslation")
+            #append("INSTALLED_APPS", "modeltranslation")
 
     # Setup for optional apps.
     optional = list(s.get("OPTIONAL_APPS", []))

@@ -318,7 +318,8 @@ var django;
             this.init();
         };
 
-        if ($('body').hasClass('change-form')) {
+        //#####if ($('body').hasClass('change-form')) {
+        if ($('body').hasClass('grp-change-form')) {
             // Group normal fields and fields in (existing) stacked inlines
             var grouper = new TranslationFieldGrouper({
                 $fields: $('.mt').filter('input, textarea, select, iframe').filter(':parents(.inline-tabular)')
