@@ -1,5 +1,8 @@
 .. image:: https://secure.travis-ci.org/stephenmcd/mezzanine.png?branch=master
    :target: http://travis-ci.org/stephenmcd/mezzanine
+.. image:: https://coveralls.io/repos/stephenmcd/mezzanine/badge.png
+   :target: https://coveralls.io/repos/stephenmcd/mezzanine
+   :alt: coveralls.io
 
 Created by `Stephen McDonald <http://twitter.com/stephen_mcd>`_
 
@@ -105,22 +108,6 @@ both `GitHub`_ and `Bitbucket`_ respectively, so contributing is as
 easy as forking the project on either of these sites and committing
 back your enhancements.
 
-Please note the following guidelines for contributing:
-
-* Before doing anything, discuss it on the `mezzanine-users`_ mailing
-  list first.
-* Contributed code must be written in the existing style. For Python
-  (and to a decent extent, JavaScript as well), this is as simple as
-  following the `Django coding style`_ and (most importantly)
-  `PEP 8`_. Front-end CSS should adhere to the
-  `Bootstrap CSS guidelines`_.
-* Contributions must be available on a separately named branch
-  based on the latest version of the main branch.
-* Run the tests before committing your changes. If your changes
-  cause the tests to break, they won't be accepted.
-* If you are adding new functionality, you must include basic tests
-  and documentation.
-
 
 Donating
 ========
@@ -168,7 +155,7 @@ Quotes
 .. _`Cartridge`: http://cartridge.jupo.org/
 .. _`Search engine and API`: http://mezzanine.jupo.org/docs/search-engine.html
 .. _`dashboard`: http://mezzanine.jupo.org/docs/admin-customization.html#dashboard
-.. _`Free Themes`: http://thecodinghouse.in/themes/
+.. _`Free Themes`: https://github.com/thecodinghouse/mezzanine-themes
 .. _`Premium Themes`: http://mezzathe.me/
 .. _`@abhinavsohani`: https://twitter.com/abhinavsohani
 .. _`@joshcartme`: https://twitter.com/joshcartme
@@ -191,9 +178,6 @@ Quotes
 .. _`GitHub issue tracker`: http://github.com/stephenmcd/mezzanine/issues
 .. _`#mezzanine IRC channel`: irc://irc.freenode.net/mezzanine
 .. _`Freenode`: http://freenode.net
-.. _`Django coding style`: https://docs.djangoproject.com/en/dev/internals/contributing/writing-code/coding-style/
-.. _`PEP 8`: http://www.python.org/dev/peps/pep-0008/
-.. _`Bootstrap CSS guidelines`: https://github.com/twbs/bootstrap/blob/master/CONTRIBUTING.md#css
 .. _`Mezzanine Project`: http://mezzanine.jupo.org
 
 .. _`Python Software Foundation`: http://www.python.org/psf/

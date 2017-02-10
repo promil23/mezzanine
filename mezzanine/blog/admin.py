@@ -27,7 +27,7 @@ class BlogCategoryAdmin(BaseTranslationModelAdmin):
 
     fieldsets = ((None, {"fields": ("title",)}),)
 
-    def in_menu(self):
+    def has_module_permission(self, request):
         """
         Hide from the admin menu unless explicitly set in ``ADMIN_MENU_ORDER``.
         """

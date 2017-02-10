@@ -10,8 +10,8 @@ actually be exposed to, such as :class:`mezzanine.core.models.Displayable`
 and :class:`mezzanine.pages.models.Page`, which are the two main models you
 will inherit from when building your own models for content types.
 
-Before we look at :class:`.Displayable` and :class:`.Page`, here's a quick list of
-all the abstract models used to build them:
+Before we look at :class:`.Displayable` and :class:`.Page`, here's a quick
+list of all the abstract models used to build them:
 
   * :class:`mezzanine.core.models.SiteRelated` - Contains a related
     ``django.contrib.sites.models.Site`` field.
@@ -38,8 +38,8 @@ out of the box to end users, that make use of :class:`.Displayable` and
 
   * :class:`mezzanine.blog.models.BlogPost` - Blog posts that subclass
     :class:`.Displayable` as they're not part of the site's navigation.
-  * :class:`mezzanine.pages.models.RichTextPage` - Default :class:`.Page` subclass,
-    providing a WYSIWYG editable field.
+  * :class:`mezzanine.pages.models.RichTextPage` - Default :class:`.Page`
+    subclass, providing a WYSIWYG editable field.
   * :class:`mezzanine.pages.models.Link` - :class:`.Page` subclass for links
     pointing to other URLs.
   * :class:`mezzanine.forms.models.Form` - :class:`.Page` subclass for building
@@ -79,8 +79,8 @@ The :class:`.Page` Model
 ========================
 
 The foundation of a Mezzanine site is the model
-:class:`mezzanine.pages.models.Page`. Each :class:`.Page` instance is stored in a
-hierarchical tree to form the site's navigation, and an interface for
+:class:`mezzanine.pages.models.Page`. Each :class:`.Page` instance is stored
+in a hierarchical tree to form the site's navigation, and an interface for
 managing the structure of the navigation tree is provided in the admin
 via :class:`mezzanine.pages.admin.PageAdmin`. All types of content inherit
 from the :class:`.Page` model and Mezzanine provides a default content type
@@ -165,8 +165,8 @@ the navigation tree.
     supported. Therefore you cannot subclass the :class:`.RichTextPage` or
     any other custom content types you create yourself. Should you need
     to implement a WYSIWYG editable field in the way the
-    :class:`.RichTextPage` model does, you can simply subclass both :class:`.Page`
-    and :class:`.RichText`, the latter being imported from
+    :class:`.RichTextPage` model does, you can simply subclass both
+    :class:`.Page` and :class:`.RichText`, the latter being imported from
     :class:`mezzanine.core.models`.
 
 Displaying Custom Content Types
@@ -216,40 +216,12 @@ If a :class:`.Page` instance with slug ``authors/dr-seuss`` is a child of the
 :class:`.Page` with slug ``authors``, the templates ``pages/authors/dr-seuss.html``,
 ``pages/authors/dr-seuss/author.html``, ``pages/authors/author.html``,
 ``pages/author.html``, and ``pages/page.html`` would be checked for
-respectively. This lets you specify a template for all children of a :class:`.Page`
-and a different template for the :class:`.Page` itself. For example, if an
-additional author were added as a child page of ``authors/dr-seuss`` with the
-slug ``authors/dr-seuss/theo-lesieg``, the template
-``pages/authors/dr-seuss/author.html`` would be among those checked.
-
-Overriding vs Extending Templates
-=================================
-
-A typical problem that reusable Django apps face, is being able to
-extend the app's templates rather than overriding them. The app will
-usually provide templates that the app will look for by name, which
-allows the developer to create their own versions of the templates in
-their project's templates directory. However if the template is
-sufficiently complex, with a good range of extendable template blocks,
-they need to duplicate all of the features of the template within
-their own version. This may cause the project's version of the
-templates to become incompatible as new versions of the upstream app
-become available.
-
-Ideally we would be able to use Django's ``extends`` tag to extend the
-app's template instead, and only override the template blocks we're
-interested in. The problem with this however, is that the app will
-attempt to load the template with a specific name, so we can't override
-*and* extend a template at the same time, as circular inheritance will
-occur, e.g. Django thinks the template is trying to extend itself, which
-is impossible.
-
-To solve this problem, Mezzanine provides the :func:`.overextends`
-template tag, which allows you to extend a template with the same name.
-The :func:`.overextends`  tag works the same way as Django's ``extends`` tag,
-(in fact it subclasses it), so it must be the first tag in the template.
-What it does differently is that the template using it will be excluded
-from loading when Django searches for the template to extend from.
+respectively. This lets you specify a template for all children of a
+:class:`.Page` and a different template for the :class:`.Page` itself.
+For example, if an additional author were added as a child page of
+``authors/dr-seuss`` with the slug ``authors/dr-seuss/theo-lesieg``,
+the template ``pages/authors/dr-seuss/author.html`` would be among
+those checked.
 
 Page Processors
 ===============
@@ -268,12 +240,12 @@ custom :class:`.Page` models and are then called inside the
 :class:`.Page` instance. A Page Processor will always be passed two arguments
 - the request and the :class:`.Page` instance, and can either return a
 dictionary that will be added to the template context, or it can return
-any of Django's ``HttpResponse`` classes which will override the
+any of Django's :class:`~django.http.HttpResponse` classes which will override the
 :func:`mezzanine.pages.views.page` view entirely.
 
 To associate a Page Processor to a custom :class:`.Page` model you must
 create the function for it in a module called :mod:`.page_processors.py`
-inside one of your ``INSTALLED_APPS`` and decorate it using the
+inside one of your :django:setting:`INSTALLED_APPS` and decorate it using the
 decorator :func:`mezzanine.pages.page_processors.processor_for`.
 
 Continuing on from our author example, suppose we want to add an
@@ -435,10 +407,10 @@ Each :class:`.Page` instance has a field :attr:`in_menus` which specifies
 which menus the page should appear in. In the admin interface, the
 :attr:`in_menus` field is a list of checkboxes for each of the menu
 templates. The menu choices for the :attr:`in_menus` field are defined by
-the ``PAGE_MENU_TEMPLATES`` setting, which is a sequence of menu
-templates. Each item in the sequence is a three item sequence,
-containing a unique ID for the template, a label for the template, and
-the template path. For example in your ``settings.py`` module::
+the :ref:`PAGE_MENU_TEMPLATES` setting, which is a sequence of
+menu templates. Each item in the sequence is a three item sequence,
+containing a unique ID for the template, a label for the template,
+and the template path. For example in your ``settings.py`` module::
 
     PAGE_MENU_TEMPLATES = (
         (1, "Top navigation bar", "pages/menus/dropdown.html"),
@@ -447,7 +419,7 @@ the template path. For example in your ``settings.py`` module::
     )
 
 Which of these entries is selected for new pages (all are selected by default)
-is controlled by the ``PAGE_MENU_TEMPLATES_DEFAULT`` setting. For example,
+is controlled by the :ref:`PAGE_MENU_TEMPLATES_DEFAULT` setting. For example,
 ``PAGE_MENU_TEMPLATES_DEFAULT = (1, 3)`` will cause the admin section
 to pre-select the "Top navigation bar" and the "Footer" when using
 the example above.
@@ -473,11 +445,11 @@ menu template, so it's up to your menu template to check the page's
     </ul>
 
 Note that if a menu template is not defined in the
-``PAGE_MENU_TEMPLATES`` setting, the branch pages supplied to it will
+:ref:`PAGE_MENU_TEMPLATES` setting, the branch pages supplied to it will
 always have the ``in_menu`` attribute set to ``True``, so the only way
 this will be ``False`` is if the menu template has been added to
-``PAGE_MENU_TEMPLATES``, and then *not* selected for a page in the admin
-interface.
+:ref:`PAGE_MENU_TEMPLATES`, and then *not* selected for a page in the
+admin interface.
 
 Menu Variables
 --------------
@@ -569,4 +541,4 @@ as active in the navigation, and to generate breadcrumbs for the
 ``page`` instance as well.
 
 An example of this setup is Mezzanine's blog application, which does not
-use ``Page`` content types, and is just a regular Django app.
+use :class:`.Page` content types, and is just a regular Django app.

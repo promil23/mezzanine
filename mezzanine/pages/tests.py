@@ -1,4 +1,6 @@
 from __future__ import unicode_literals
+
+from django.contrib.sites.models import Site
 from future.builtins import str
 
 from unittest import skipUnless
@@ -20,6 +22,7 @@ from mezzanine.core.request import current_request
 from mezzanine.pages.models import Page, RichTextPage
 from mezzanine.pages.admin import PageAdminForm
 from mezzanine.urls import PAGES_SLUG
+from mezzanine.utils.sites import override_current_site_id
 from mezzanine.utils.tests import TestCase
 
 
@@ -28,13 +31,19 @@ User = get_user_model()
 
 class PagesTests(TestCase):
 
-    @staticmethod
-    def reset_queries(connection):
-        try:
-            # Django 1.8+ - queries_log is a deque
-            connection.queries_log.clear()
-        except AttributeError:
-            connection.queries = []
+    def setUp(self):
+        """
+        Make sure we have a thread-local request with a site_id attribute set.
+        """
+        super(PagesTests, self).setUp()
+        from mezzanine.core.request import _thread_local
+        request = self._request_factory.get('/')
+        request.site_id = settings.SITE_ID
+        _thread_local.request = request
+
+    def tearDown(self):
+        from mezzanine.core.request import _thread_local
+        del _thread_local.request
 
     def test_page_ascendants(self):
         """
@@ -45,8 +54,6 @@ class PagesTests(TestCase):
         primary, created = RichTextPage.objects.get_or_create(title="Primary")
         secondary, created = primary.children.get_or_create(title="Secondary")
         tertiary, created = secondary.children.get_or_create(title="Tertiary")
-        # Force a site ID to avoid the site query when measuring queries.
-        setattr(current_request(), "site_id", settings.SITE_ID)
 
         # Test that get_ascendants() returns the right thing.
         page = Page.objects.get(id=tertiary.id)
@@ -56,7 +63,7 @@ class PagesTests(TestCase):
 
         # Test ascendants are returned in order for slug, using
         # a single DB query.
-        self.reset_queries(connection)
+        connection.queries_log.clear()
         pages_for_slug = Page.objects.with_ascendants_for_slug(tertiary.slug)
         self.assertEqual(len(connection.queries), 1)
         self.assertEqual(pages_for_slug[0].id, tertiary.id)
@@ -65,7 +72,7 @@ class PagesTests(TestCase):
 
         # Test page.get_ascendants uses the cached attribute,
         # without any more queries.
-        self.reset_queries(connection)
+        connection.queries_log.clear()
         ascendants = pages_for_slug[0].get_ascendants()
         self.assertEqual(len(connection.queries), 0)
         self.assertEqual(ascendants[0].id, secondary.id)
@@ -78,7 +85,7 @@ class PagesTests(TestCase):
         secondary.save()
         pages_for_slug = Page.objects.with_ascendants_for_slug(tertiary.slug)
         self.assertEqual(len(pages_for_slug[0]._ascendants), 0)
-        self.reset_queries(connection)
+        connection.queries_log.clear()
         ascendants = pages_for_slug[0].get_ascendants()
         self.assertEqual(len(connection.queries), 2)  # 2 parent queries
         self.assertEqual(pages_for_slug[0].id, tertiary.id)
@@ -202,13 +209,6 @@ class PagesTests(TestCase):
         if accounts_installed:
             # View / pattern name redirect properly, without encoding next.
             login = "%s%s?next=%s" % (login_prefix, login_url, private_url)
-            # Test if view name or URL pattern can be used as LOGIN_URL.
-            with override_settings(LOGIN_URL="mezzanine.accounts.views.login"):
-                # Note: With 1.7 this loops if the view app isn't installed.
-                response = self.client.get(public_url, follow=True)
-                self.assertEqual(response.status_code, 200)
-                response = self.client.get(private_url, follow=True)
-                self.assertRedirects(response, login)
             with override_settings(LOGIN_URL="login"):
                 # Note: The "login" is a pattern name in accounts.urls.
                 response = self.client.get(public_url, follow=True)
@@ -389,3 +389,17 @@ class PagesTests(TestCase):
         submitted_form = TestPageAdminForm(data=data)
         self.assertTrue(submitted_form.is_valid())
         self.assertEqual(submitted_form.cleaned_data['slug'], 'hello/world')
+
+    def test_ascendants_different_site(self):
+        site2 = Site.objects.create(domain='site2.example.com', name='Site 2')
+
+        parent = Page.objects.create(title="Parent", site=site2)
+        child = parent.children.create(title="Child", site=site2)
+        grandchild = child.children.create(title="Grandchild", site=site2)
+
+        # Re-retrieve grandchild so its parent attribute is not cached
+        with override_current_site_id(site2.id):
+            grandchild = Page.objects.get(pk=grandchild.pk)
+
+        with self.assertNumQueries(1):
+            self.assertListEqual(grandchild.get_ascendants(), [child, parent])

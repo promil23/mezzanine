@@ -2,11 +2,9 @@
 from distutils.dir_util import copy_tree
 from importlib import import_module
 import os
-from optparse import make_option
 from shutil import move, rmtree
 from tempfile import mkdtemp
 
-import django
 from django.core.management import CommandError
 from django.core.management.commands.startproject import Command as BaseCommand
 from django.utils import six
@@ -18,11 +16,6 @@ import mezzanine
 class Command(BaseCommand):
 
     help = BaseCommand.help.replace("Django", "Mezzanine")
-
-    if django.VERSION < (1, 8):
-        option_list = BaseCommand.option_list + (make_option(
-            "-a", "--alternate", dest="alt", metavar="PACKAGE",
-            help="Alternate package to use, containing a project_template"),)
 
     def add_arguments(self, parser):
         super(Command, self).add_arguments(parser)
@@ -42,14 +35,9 @@ class Command(BaseCommand):
         super(Command, self).handle(*args, **options)
 
         target = options.get("target", None)
-        if django.VERSION < (1, 8):
-            name = args[0] if args else None
-            if target is None:
-                target = args[1] if len(args) > 1 else None
-        else:
-            name = options['name']
-            if target is None:
-                target = options['directory']
+        name = options['name']
+        if target is None:
+            target = options['directory']
 
         project_dir = self.get_project_directory(name, target)
         project_app_dir = os.path.join(project_dir, name)
@@ -67,11 +55,10 @@ class Command(BaseCommand):
             options["template"] = six.text_type(
                 os.path.join(os.path.dirname(os.path.abspath(
                     import_module(alt).__file__)), "project_template"))
-            key = "target" if django.VERSION < (1, 8) else "directory"
-            options[key] = mkdtemp()
+            options["directory"] = mkdtemp()
             self.handle(*args, **options)
-            copy_tree(options[key], project_dir)
-            rmtree(options[key])
+            copy_tree(options["directory"], project_dir)
+            rmtree(options["directory"])
 
     def get_project_directory(self, name, target):
         """
