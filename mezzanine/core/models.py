@@ -9,6 +9,7 @@ try:
 except ImportError:
     from urllib import urlopen, urlencode
 
+from django.apps import apps
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.db import models
 from django.db.models.base import ModelBase
@@ -304,11 +305,11 @@ class Displayable(Slugged, MetaData, TimeStamped):
         permanently store ``get_absolute_url``, since it may change
         over time.
         """
-        if self.short_url == SHORT_URL_UNSET:
-            self.short_url = self.get_absolute_url_with_host()
-        elif not self.short_url:
+        if not self.short_url or self.short_url == SHORT_URL_UNSET:
             self.short_url = self.generate_short_url()
             self.save()
+        if self.short_url == SHORT_URL_UNSET:
+            self.short_url = self.get_absolute_url_with_host()
 
     def generate_short_url(self):
         """
@@ -500,6 +501,56 @@ class Ownable(models.Model):
         Restrict in-line editing to the objects's owner and superusers.
         """
         return request.user.is_superuser or request.user.id == self.user_id
+
+
+class ContentTyped(models.Model):
+    """
+    Mixin for models that can be subclassed to create custom types.
+    In order to use them:
+
+    - Inherit model from ContentTyped.
+    - Call the set_content_model() method in the model's save() method.
+    - Inherit that model's ModelAdmin from ContentTypesAdmin.
+    - Include "admin/includes/content_typed_change_list.html" in the
+    change_list.html template.
+    """
+    content_model = models.CharField(editable=False, max_length=50, null=True)
+
+    class Meta:
+        abstract = True
+
+    @classmethod
+    def get_content_model_name(cls):
+        """
+        Return the name of the OneToOneField django automatically creates for
+        child classes in multi-table inheritance.
+        """
+        return cls._meta.object_name.lower()
+
+    @classmethod
+    def get_content_models(cls):
+        """ Return all subclasses of the concrete model.  """
+        concrete_model = base_concrete_model(ContentTyped, cls)
+        return [m for m in apps.get_models()
+                if m is not concrete_model and issubclass(m, concrete_model)]
+
+    def set_content_model(self):
+        """
+        Set content_model to the child class's related name, or None if this is
+        the base class.
+        """
+        if not self.content_model:
+            is_base_class = (
+                base_concrete_model(ContentTyped, self) == self.__class__)
+            self.content_model = (
+                None if is_base_class else self.get_content_model_name())
+
+    def get_content_model(self):
+        """
+        Return content model, or if this is the base class return it.
+        """
+        return (getattr(self, self.content_model) if self.content_model
+                else self)
 
 
 class SitePermission(models.Model):

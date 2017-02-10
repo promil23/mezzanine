@@ -73,26 +73,17 @@ class BlogPost(Displayable, Ownable, RichText, AdminThumbMixin):
                     break
         return reverse(url_name, kwargs=kwargs)
 
-    # These methods are deprecated wrappers for keyword and category
-    # access. They existed to support Django 1.3 with prefetch_related
-    # not existing, which was therefore manually implemented in the
-    # blog list views. All this is gone now, but the access methods
-    # still exist for older templates.
 
-    def category_list(self):
-        from warnings import warn
-        warn("blog_post.category_list in templates is deprecated"
-             "use blog_post.categories.all which are prefetched")
-        return getattr(self, "_categories", self.categories.all())
+class BlogCategory(Slugged):
+    """
+    A category for grouping blog posts into a series.
+    """
 
-    def keyword_list(self):
-        from warnings import warn
-        warn("blog_post.keyword_list in templates is deprecated"
-             "use the keywords_for template tag, as keywords are prefetched")
-        try:
-            return self._keywords
-        except AttributeError:
-            keywords = [k.keyword for k in self.keywords.all()]
-            setattr(self, "_keywords", keywords)
-            return self._keywords
+    class Meta:
+        verbose_name = _("Blog Category")
+        verbose_name_plural = _("Blog Categories")
+        ordering = ("title",)
 
+    @models.permalink
+    def get_absolute_url(self):
+        return ("blog_post_list_category", (), {"category": self.slug})

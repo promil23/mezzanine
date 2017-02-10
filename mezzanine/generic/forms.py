@@ -9,7 +9,7 @@ from django.utils.translation import ugettext, ugettext_lazy as _
 
 from mezzanine.conf import settings
 from mezzanine.core.forms import Html5Mixin
-from mezzanine.generic.models import Keyword, ThreadedComment, Rating
+from mezzanine.generic.models import Keyword, ThreadedComment
 from mezzanine.utils.cache import add_cache_bypass
 from mezzanine.utils.email import split_addresses, send_mail_template
 from mezzanine.utils.static import static_lazy as static
@@ -184,6 +184,15 @@ class RatingForm(CommentSecurityForm):
     def __init__(self, request, *args, **kwargs):
         self.request = request
         super(RatingForm, self).__init__(*args, **kwargs)
+        if request and request.user.is_authenticated():
+            current = self.rating_manager.filter(user=request.user).first()
+            if current:
+                self.initial['value'] = current.value
+
+    @property
+    def rating_manager(self):
+        rating_name = self.target_object.get_ratingfield_name()
+        return getattr(self.target_object, rating_name)
 
     def clean(self):
         """
@@ -207,11 +216,11 @@ class RatingForm(CommentSecurityForm):
         user = self.request.user
         self.undoing = False
         rating_value = self.cleaned_data["value"]
-        rating_name = self.target_object.get_ratingfield_name()
-        rating_manager = getattr(self.target_object, rating_name)
+        manager = self.rating_manager
 
         if user.is_authenticated():
-            rating_instance, created = rating_manager.get_or_create(user=user, defaults={'value': rating_value})
+            rating_instance, created = manager.get_or_create(user=user,
+                defaults={'value': rating_value})
             if not created:
                 if rating_instance.value == int(rating_value):
                     # User submitted the same rating as previously,
@@ -222,5 +231,5 @@ class RatingForm(CommentSecurityForm):
                     rating_instance.value = rating_value
                     rating_instance.save()
         else:
-            rating_instance = rating_manager.create(value=rating_value)
+            rating_instance = manager.create(value=rating_value)
         return rating_instance

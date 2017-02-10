@@ -21,11 +21,13 @@ class Html5Mixin(object):
     def __init__(self, *args, **kwargs):
         super(Html5Mixin, self).__init__(*args, **kwargs)
         if hasattr(self, "fields"):
-            # Autofocus first field
-            first_field = next(iter(self.fields.values()))
-            first_field.widget.attrs["autofocus"] = ""
+            first_field = None
 
             for name, field in self.fields.items():
+                # Autofocus first non-hidden field
+                if not first_field and not field.widget.is_hidden:
+                    first_field = field
+                    first_field.widget.attrs["autofocus"] = ""
                 if settings.FORMS_USE_HTML5:
                     if isinstance(field, forms.EmailField):
                         self.fields[name].widget.input_type = "email"
@@ -42,9 +44,10 @@ class TinyMceWidget(forms.Textarea):
     """
 
     class Media:
-        js = (static("mezzanine/tinymce/tinymce.min.js"),
-              static(settings.TINYMCE_SETUP_JS))
-        css = {'all': (static("mezzanine/tinymce/tinymce.css"),)}
+        js = [static("mezzanine/tinymce/tinymce.min.js"),
+              static("mezzanine/tinymce/jquery.tinymce.min.js"),
+              static(settings.TINYMCE_SETUP_JS)]
+        css = {'all': [static("mezzanine/tinymce/tinymce.css")]}
 
     def __init__(self, *args, **kwargs):
         super(TinyMceWidget, self).__init__(*args, **kwargs)
@@ -78,6 +81,8 @@ class DynamicInlineAdminForm(forms.ModelForm):
 
     class Media:
         js = (static("mezzanine/js/admin/dynamic_inline.js"),)
+        #js = [static("mezzanine/js/%s" % settings.JQUERY_UI_FILENAME),
+        #      static("mezzanine/js/admin/dynamic_inline.js")]
 
 
 class SplitSelectDateTimeWidget(forms.SplitDateTimeWidget):
@@ -94,6 +99,8 @@ class CheckboxSelectMultiple(forms.CheckboxSelectMultiple):
     """
     Wraps render with a CSS class for styling.
     """
+    dont_use_model_field_default_for_empty_data = True
+
     def render(self, *args, **kwargs):
         rendered = super(CheckboxSelectMultiple, self).render(*args, **kwargs)
         return mark_safe("<span class='multicheckbox'>%s</span>" % rendered)

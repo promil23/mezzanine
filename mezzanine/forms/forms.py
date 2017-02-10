@@ -146,8 +146,6 @@ class FormForForm(forms.ModelForm):
             field_widget = fields.WIDGETS.get(field.field_type)
             field_args = {"label": field.label, "required": field.required,
                           "help_text": field.help_text}
-            if field.required and field.help_text is None:
-                field_args["help_text"] = _("required")
             arg_names = field_class.__init__.__code__.co_varnames
             if "max_length" in arg_names:
                 field_args["max_length"] = settings.FORMS_FIELD_MAX_LENGTH
@@ -233,10 +231,10 @@ class FormForForm(forms.ModelForm):
     def email_to(self):
         """
         Return the value entered for the first field of type
-        ``forms.fields.EMAIL``.
+        ``forms.EmailField``.
         """
         for field in self.form_fields:
-            if field.is_a(fields.EMAIL):
+            if issubclass(fields.CLASSES[field.field_type], forms.EmailField):
                 return self.cleaned_data["field_%s" % field.id]
         return None
 

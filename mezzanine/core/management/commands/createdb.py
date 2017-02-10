@@ -1,15 +1,12 @@
 from __future__ import print_function, unicode_literals
 from future.builtins import int, input
 
-from optparse import make_option
 from socket import gethostname
 
-from django import VERSION
 from django.core.management.base import BaseCommand, CommandError
 from django.contrib.auth import get_user_model
 from django.contrib.sites.models import Site
 from django.core.management import call_command
-from django.core.management.commands import migrate
 from django.db import connection
 
 from mezzanine.conf import settings
@@ -26,25 +23,16 @@ class Command(BaseCommand):
     help = "Performs initial Mezzanine database setup."
     can_import_settings = True
 
-    def __init__(self, *args, **kwargs):
-        """
-        Adds extra command options (executed only by Django <= 1.7).
-        """
-        super(Command, self).__init__(*args, **kwargs)
-        if VERSION[0] == 1 and VERSION[1] <= 7:
-            self.option_list = migrate.Command.option_list + (
-                make_option("--nodata", action="store_true", dest="nodata",
-                    default=False, help="Do not add demo data."),)
-
     def add_arguments(self, parser):
         """
         Adds extra command options (executed only by Django >= 1.8).
         """
-        parser.add_argument("--nodata", action="store_true", dest="nodata",
-            default=False, help="Do not add demo data.")
-        parser.add_argument("--noinput", action="store_false",
-            dest="interactive", default=True, help="Do not prompt the user "
-            "for input of any kind.")
+        parser.add_argument(
+            "--nodata", action="store_true", dest="nodata",
+            help="Do not add demo data.")
+        parser.add_argument(
+            "--noinput", action="store_false", dest="interactive",
+            help="Do not prompt the user for input of any kind.")
 
     def handle(self, **options):
 
@@ -159,6 +147,9 @@ class Command(BaseCommand):
             "i18n.\nWould you like to update translation "
             "fields from the default ones? (yes/no): ")
         if update:
-            create_fields.Command().execute(
-                    verbosity=self.verbosity, interactive=False)
-            update_fields.Command().execute(verbosity=self.verbosity)
+            options = {
+                "verbosity": self.verbosity,
+                "interactive": self.interactive,
+            }
+            call_command(create_fields.Command(), **options)
+            call_command(update_fields.Command(), **options)
