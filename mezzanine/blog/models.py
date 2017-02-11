@@ -3,6 +3,7 @@ from future.builtins import str
 
 from django.db import models
 from django.core.urlresolvers import reverse
+from django.utils import translation
 from django.utils.translation import ugettext_lazy as _
 
 from mezzanine.conf import settings
@@ -71,7 +72,12 @@ class BlogPost(Displayable, Ownable, RichText, AdminThumbMixin):
                 kwargs[date_part] = date_value
                 if date_part == settings.BLOG_URLS_DATE_FORMAT:
                     break
-        return reverse(url_name, kwargs=kwargs)
+
+        lang = translation.get_language()
+        translation.deactivate()
+        url = reverse(url_name, kwargs=kwargs)
+        translation.activate(lang)
+        return url
 
 
 class BlogCategory(Slugged):
@@ -83,6 +89,7 @@ class BlogCategory(Slugged):
         verbose_name = _("Blog Category")
         verbose_name_plural = _("Blog Categories")
         ordering = ("title",)
+        abstract = True
 
     @models.permalink
     def get_absolute_url(self):

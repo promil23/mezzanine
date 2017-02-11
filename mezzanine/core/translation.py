@@ -2,7 +2,7 @@ from modeltranslation.translator import TranslationOptions
 
 
 class TranslatedSlugged(TranslationOptions):
-    fields = ('title',)
+    fields = ('title', 'slug')
 
 
 class TranslatedDisplayable(TranslatedSlugged):
