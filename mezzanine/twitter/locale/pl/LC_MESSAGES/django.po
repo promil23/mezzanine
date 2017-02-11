@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Mezzanine\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-10-05 07:20-0430\n"
+"POT-Creation-Date: 2017-02-11 04:59+0000\n"
 "PO-Revision-Date: 2012-10-26 11:29+0000\n"
 "Last-Translator: Kniyl <mathias.ettinger@gmail.com>\n"
 "Language-Team: Polish (http://www.transifex.com/projects/p/mezzanine/"
@@ -20,108 +20,140 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2);\n"
 
-#: __init__.py:16
+#: external/mezzanine/mezzanine/twitter/__init__.py:17
 msgid "User"
 msgstr "Użytkownik"
 
-#: __init__.py:17
+#: external/mezzanine/mezzanine/twitter/__init__.py:18
 msgid "List"
 msgstr "Lista"
 
-#: __init__.py:18
+#: external/mezzanine/mezzanine/twitter/__init__.py:19
 msgid "Search"
 msgstr "Zapytanie"
 
-#: defaults.py:21
+#: external/mezzanine/mezzanine/twitter/admin.py:46
+msgid "Send to Twitter"
+msgstr ""
+
+#: external/mezzanine/mezzanine/twitter/defaults.py:21
 msgid "Default Twitter Query Type"
 msgstr ""
 
-#: defaults.py:22
+#: external/mezzanine/mezzanine/twitter/defaults.py:22
 msgid ""
 "Type of query that will be used to retrieve tweets for the default Twitter "
 "feed."
 msgstr ""
 
-#: defaults.py:31
+#: external/mezzanine/mezzanine/twitter/defaults.py:31
 msgid "Default Twitter Query"
 msgstr ""
 
-#: defaults.py:32
-msgid "Twitter query to use for the default query type."
+#: external/mezzanine/mezzanine/twitter/defaults.py:32
+msgid ""
+"Twitter query to use for the default query type. \n"
+"\n"
+"*Note:* Once you change this from the default, you'll need to configure each "
+"of the oAuth consumer/access key/secret settings. Please refer to http://dev."
+"twitter.com for more information on creating an application and acquiring "
+"these settings."
 msgstr ""
 
-#: defaults.py:39
+#: external/mezzanine/mezzanine/twitter/defaults.py:43
 msgid "Default Number of Tweets"
 msgstr "Domyślna liczba Tweetów"
 
-#: defaults.py:40
+#: external/mezzanine/mezzanine/twitter/defaults.py:44
 msgid "Number of tweets to display in the default Twitter feed."
 msgstr "Liczba Tweetów do wyświetlenia w domyślnym feedzie Twittera."
 
-#: models.py:27
+#: external/mezzanine/mezzanine/twitter/defaults.py:51
+#, fuzzy
+#| msgid "Twitter query"
+msgid "Twitter OAuth consumer key"
+msgstr "Zapytanie Tweeterowe"
+
+#: external/mezzanine/mezzanine/twitter/defaults.py:58
+msgid "Twitter OAuth consumer secret"
+msgstr ""
+
+#: external/mezzanine/mezzanine/twitter/defaults.py:65
+msgid "Twitter OAuth access token"
+msgstr ""
+
+#: external/mezzanine/mezzanine/twitter/defaults.py:72
+msgid "Twitter OAuth access token secret"
+msgstr ""
+
+#: external/mezzanine/mezzanine/twitter/models.py:41
 msgid "Type"
 msgstr "Typ"
 
-#: models.py:29
+#: external/mezzanine/mezzanine/twitter/models.py:43
 msgid "Value"
 msgstr "Wartość"
 
-#: models.py:33
+#: external/mezzanine/mezzanine/twitter/models.py:47
 msgid "Twitter query"
 msgstr "Zapytanie Tweeterowe"
 
-#: models.py:34
+#: external/mezzanine/mezzanine/twitter/models.py:48
 msgid "Twitter queries"
 msgstr "Zapytania Twitterowe"
 
-#: models.py:102
+#: external/mezzanine/mezzanine/twitter/models.py:141
 msgid "Twitter ID"
 msgstr "Identyfikator Twitter"
 
-#: models.py:103
+#: external/mezzanine/mezzanine/twitter/models.py:142
 msgid "Date/time"
 msgstr "Data/czas"
 
-#: models.py:104
+#: external/mezzanine/mezzanine/twitter/models.py:143
 msgid "Message"
 msgstr "Wiadomość"
 
-#: models.py:105
+#: external/mezzanine/mezzanine/twitter/models.py:144
 msgid "Profile image URL"
 msgstr "URL awatara"
 
-#: models.py:106
+#: external/mezzanine/mezzanine/twitter/models.py:145
 msgid "User name"
 msgstr "Nazwa użytkownika"
 
-#: models.py:107
+#: external/mezzanine/mezzanine/twitter/models.py:146
 msgid "Full name"
 msgstr "Pełna nazwa"
 
-#: models.py:109
+#: external/mezzanine/mezzanine/twitter/models.py:148
 msgid "Profile image URL (Retweeted by)"
 msgstr "URL awatara (Retweetnięty przez)"
 
-#: models.py:111
+#: external/mezzanine/mezzanine/twitter/models.py:150
 msgid "User name (Retweeted by)"
 msgstr "Nazwa użytkownika (Retweetnięty przez)"
 
-#: models.py:113
+#: external/mezzanine/mezzanine/twitter/models.py:152
 msgid "Full name (Retweeted by)"
 msgstr "Pełna nazwa (Retweetnięty przez)"
 
-#: models.py:119
+#: external/mezzanine/mezzanine/twitter/models.py:158
 msgid "Tweet"
 msgstr "Tweet"
 
-#: models.py:120
+#: external/mezzanine/mezzanine/twitter/models.py:159
 msgid "Tweets"
 msgstr "Tweety"
 
-#: templates/twitter/tweets.html:7
+#: external/mezzanine/mezzanine/twitter/templates/twitter/tweets.html:7
 msgid "Recent Tweets"
 msgstr "Ostatnie Tweety"
 
-#: templates/twitter/tweets.html:20
-msgid "ago"
-msgstr "temu"
+#: external/mezzanine/mezzanine/twitter/templates/twitter/tweets.html:19
+#, python-format
+msgid "%(sometime)s ago"
+msgstr ""
+
+#~ msgid "ago"
+#~ msgstr "temu"

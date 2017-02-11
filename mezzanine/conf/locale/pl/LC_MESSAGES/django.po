@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Mezzanine\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-10-05 07:21-0430\n"
+"POT-Creation-Date: 2017-02-11 04:59+0000\n"
 "PO-Revision-Date: 2012-10-26 11:00+0000\n"
 "Last-Translator: Kniyl <mathias.ettinger@gmail.com>\n"
 "Language-Team: Polish (http://www.transifex.com/projects/p/mezzanine/"
@@ -21,30 +21,30 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2);\n"
 
-#: admin.py:38
+#: external/mezzanine/mezzanine/conf/admin.py:50
 msgid "Settings were successfully updated."
 msgstr "Ustawienia zostały zaktualizowane pomyślnie"
 
-#: admin.py:42
+#: external/mezzanine/mezzanine/conf/admin.py:54
 msgid "Change"
 msgstr "Zmień"
 
-#: forms.py:53
+#: external/mezzanine/mezzanine/conf/forms.py:81
 msgid "Miscellaneous"
 msgstr "Inne"
 
-#: models.py:17
+#: external/mezzanine/mezzanine/conf/models.py:20
 msgid "Setting"
 msgstr "Ustawienie"
 
-#: models.py:18
+#: external/mezzanine/mezzanine/conf/models.py:21
 msgid "Settings"
 msgstr "Ustawienia"
 
-#: templates/admin/conf/setting/change_list.html:8
+#: external/mezzanine/mezzanine/conf/templates/admin/conf/setting/change_list.html:8
 msgid "Please correct the errors below."
 msgstr "Proszę poprawić poniższe błędy."
 
-#: templates/admin/conf/setting/change_list.html:31
+#: external/mezzanine/mezzanine/conf/templates/admin/conf/setting/change_list.html:39
 msgid "Save"
 msgstr "Zapisz"
