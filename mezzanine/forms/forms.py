@@ -18,6 +18,7 @@ from mezzanine.conf import settings
 from mezzanine.forms import fields
 from mezzanine.forms.models import FormEntry, FieldEntry
 from mezzanine.utils.email import split_addresses as split_choices
+from captcha.fields import ReCaptchaField
 
 
 fs = FileSystemStorage(location=settings.FORMS_UPLOAD_ROOT)
@@ -123,6 +124,8 @@ class FormForForm(forms.ModelForm):
     class Meta:
         model = FormEntry
         exclude = ("form", "entry_time")
+
+    captcha = ReCaptchaField()
 
     def __init__(self, form, context, *args, **kwargs):
         """
